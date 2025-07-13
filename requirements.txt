@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+scikit-learn
+joblib
+pandas
+numpy
+sentence-transformers
+nltk
+
+matplotlib
+
+rank_bm25
+contractions

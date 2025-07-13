@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محرك البحث المتقدم</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>محرك البحث المتقدم</h1>
+            <p>ابحث في مجموعات البيانات باستخدام نماذج استرجاع معلومات متطورة</p>
+        </header>
+
+        <form id="search-form">
+            <div class="search-box">
+                <input type="text" id="query-input" placeholder="اكتب استعلامك هنا..." required>
+                <button type="submit">ابحث</button>
+            </div>
+
+            <div class="options-panel">
+                <div class="option-group">
+                    <label for="dataset-select">اختر مجموعة البيانات:</label>
+                    <select id="dataset-select">
+                        <option value="antique" selected>Antique</option>
+                        <option value="quora">Quora</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label>الميزات الإضافية:</label>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="use-clustering" name="features">
+                        <label for="use-clustering">استخدام الكلاستر (لتسريع البحث)</label>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="use-rag" name="features">
+                        <label for="use-rag">استخدام RAG (لتوليد إجابة مباشرة)</label>
+                    </div>
+                    </div>
+            </div>
+        </form>
+
+        <div id="loading-indicator" class="hidden">جاري البحث...</div>
+        <div id="results-container">
+            </div>
+    </div>
+
+    <script>
+        const searchForm = document.getElementById('search-form');
+        const queryInput = document.getElementById('query-input');
+        const datasetSelect = document.getElementById('dataset-select');
+        const useClusteringCheckbox = document.getElementById('use-clustering');
+        const useRagCheckbox = document.getElementById('use-rag');
+        const resultsContainer = document.getElementById('results-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+
+        // افترض أن الـ API تعمل على هذا العنوان
+        const API_BASE_URL = 'http://127.0.0.1:8000'; 
+
+        searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // منع إرسال الفورم بالطريقة التقليدية
+
+            const query = queryInput.value.trim();
+            if (!query) return;
+
+            const dataset = datasetSelect.value;
+            const useClustering = useClusteringCheckbox.checked;
+            const useRag = useRagCheckbox.checked;
+
+            resultsContainer.innerHTML = ''; // مسح النتائج السابقة
+            loadingIndicator.classList.remove('hidden'); // إظهار مؤشر التحميل
+
+            let endpoint = '';
+            let requestBody = {};
+            let requestMethod = 'GET';
+            let urlParams = `?query=${encodeURIComponent(query)}&dataset_key=${dataset}`;
+
+            // --- هذا هو المنطق الأهم لتحديد أي API سيتم استدعاؤها ---
+            if (useRag) {
+                // إذا تم تفعيل RAG، فهو له الأولوية
+                endpoint = '/rag/'; // Endpoint الخاص بـ RAG
+                requestMethod = 'POST';
+                requestBody = { query: query, dataset_key: dataset };
+            } else {
+                // إذا لم يتم تفعيل RAG، نستخدم البحث الهجين
+                endpoint = '/hybrid/'; // Endpoint الخاص بالبحث الهجين
+                if (useClustering) {
+                    // إذا تم تفعيل الكلاستر، نضيفه كـ parameter
+                    // (نفترض أن API البحث الهجين يدعم هذا الخيار)
+                    // urlParams += '&use_clustering=true'; 
+                }
+            }
+            
+            try {
+                let response;
+                const fullUrl = API_BASE_URL + endpoint + (requestMethod === 'GET' ? urlParams : '');
+
+                if (requestMethod === 'POST') {
+                    response = await fetch(fullUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(requestBody),
+                    });
+                } else {
+                    response = await fetch(fullUrl);
+                }
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                // عرض النتائج بناءً على نوع الاستجابة
+                if (useRag) {
+                    renderRagResults(data);
+                } else {
+                    renderSearchResults(data.results);
+                }
+
+            } catch (error) {
+                resultsContainer.innerHTML = `<div class="error">حدث خطأ: ${error.message}</div>`;
+            } finally {
+                loadingIndicator.classList.add('hidden'); // إخفاء مؤشر التحميل
+            }
+        });
+        
+        function renderSearchResults(results) {
+            if (!results || results.length === 0) {
+                resultsContainer.innerHTML = '<p>لا توجد نتائج مطابقة.</p>';
+                return;
+            }
+
+            results.forEach(item => {
+                const resultElement = document.createElement('div');
+                resultElement.className = 'result-item';
+                resultElement.innerHTML = `
+                    <h3>${item.doc_id}</h3>
+                    <span class="score">Score: ${item.score ? item.score.toFixed(4) : 'N/A'}</span>
+                    <p>${item.text.substring(0, 250)}...</p>
+                `;
+                resultsContainer.appendChild(resultElement);
+            });
+        }
+
+        function renderRagResults(data) {
+            const ragElement = document.createElement('div');
+            ragElement.className = 'rag-result';
+            ragElement.innerHTML = `
+                <h2>إجابة مقترحة (RAG)</h2>
+                <p class="generated-answer">${data.generated_answer}</p>
+                <h3>المصادر المستخدمة:</h3>
+            `;
+            resultsContainer.appendChild(ragElement);
+            renderSearchResults(data.source_documents.map(doc => ({...doc, text: doc.content}))); // إعادة استخدام دالة عرض النتائج
+        }
+
+    </script>
+</body>
+</html>

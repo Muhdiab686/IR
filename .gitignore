@@ -1,0 +1,8 @@
+# Ignore Python cache
+__pycache__/
+venv310
+vectorizers
+.vscode
+antique_docs.db
+quora_docs.db
+inverted_index

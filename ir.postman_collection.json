@@ -1,0 +1,275 @@
+{
+	"info": {
+		"_postman_id": "7e606fdd-4a30-4edd-b88e-d168f8707c5f",
+		"name": "ir",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TF-IDF Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/search/?query=how to invest&dataset=antique&k=10",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"search",
+						""
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "how to invest"
+						},
+						{
+							"key": "dataset",
+							"value": "antique"
+						},
+						{
+							"key": "k",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BM-25 Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/bm25/?query=how to invest&dataset=antique&k=10&k1=0.1&b=0.2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"bm25",
+						""
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "how to invest"
+						},
+						{
+							"key": "dataset",
+							"value": "antique"
+						},
+						{
+							"key": "k",
+							"value": "10"
+						},
+						{
+							"key": "k1",
+							"value": "0.1"
+						},
+						{
+							"key": "b",
+							"value": "0.2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BERT Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/search-bert/?query=lot&dataset=antique&k=100",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"search-bert",
+						"bert-search",
+						""
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "lot"
+						},
+						{
+							"key": "dataset",
+							"value": "antique"
+						},
+						{
+							"key": "k",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HYBRID Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/hybrid?query=lot&dataset=antique&k=10",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"hybrid"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "lot"
+						},
+						{
+							"key": "dataset",
+							"value": "antique"
+						},
+						{
+							"key": "k",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RAG  Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/rag?query=lot&dataset=antique&k=10",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"rag",
+						"rag-search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "lot"
+						},
+						{
+							"key": "dataset",
+							"value": "antique"
+						},
+						{
+							"key": "k",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FAISS Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/vector?query=lot&dataset=antique&k=100",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"vector",
+						"vector-search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "lot"
+						},
+						{
+							"key": "dataset",
+							"value": "antique"
+						},
+						{
+							"key": "k",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Processing",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/hybrid?query=lot&dataset=antique&k=10",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"hybrid"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "lot"
+						},
+						{
+							"key": "dataset",
+							"value": "antique"
+						},
+						{
+							"key": "k",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
