@@ -3,58 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <title>Information Retrieval System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { background: #181e25; color: #adf0a6; font-family: 'Cairo', sans-serif; }
-        .center-box {
-            background: #242a32;
-            border-radius: 20px;
-            max-width: 600px;
-            margin: 60px auto;
-            padding: 38px 32px 28px 32px;
-            box-shadow: 0 0 16px #0007;
-            text-align: center;
+        body {
+            min-height: 100vh;
+            background: linear-gradient(120deg, #141b19 0%, #181e24 100%);
+            color: #c3ffd9;
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        h2 { margin-bottom: 10px; }
-        .subtitle { color: #7ecc81; margin-bottom: 30px; }
-        .row { display: flex; gap: 10px; justify-content: center; margin-bottom: 18px; }
-        input[type="text"], select, input[type="number"] { border-radius: 8px; border: none; padding: 10px; font-size: 1em; }
-        #search-btn { background: #22cf4b; color: #fff; border-radius: 8px; padding: 0 32px; font-weight: bold; border: none; margin-right: 10px; }
-        .options { gap: 10px; margin-bottom: 16px; justify-content: center; }
-        .features label { margin-left: 18px; font-size: 1em; color: #adf0a6; }
-        #loading-indicator { text-align: center; margin: 18px 0; color: #ffa; }
+        .center-box {
+            background: rgba(25, 34, 30, 0.96);
+            border-radius: 26px;
+            box-shadow: 0 6px 32px 0 #053d236b, 0 2px 16px #54e57e18;
+            padding: 38px 38px 30px 38px;
+            text-align: center;
+            min-width: 350px;
+            width: 430px;
+            max-width: 97vw;
+            border: 1.5px solid #10ea8117;
+            backdrop-filter: blur(7px);
+        }
+        h2 {
+            color: #69f07d;
+            margin-bottom: 10px;
+            font-size: 2em;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .logo-icon {font-size: 1.3em;margin-left: 7px;}
+        .subtitle {color: #93d49a;margin-bottom: 27px;font-size: 1.07em;letter-spacing: 0.01em;}
+        form .main-row {display: flex;gap: 13px;margin-bottom: 18px;justify-content: center;}
+        #query-input {flex: 1;border-radius: 12px;padding: 13px 13px;border: none;font-size: 1.1em;background: #161b22;color: #d7ffd2;box-shadow: 0 1.5px 7px #1dea5050;transition: outline 0.18s, box-shadow 0.19s, background 0.14s;}
+        #query-input:focus {outline: 2.5px solid #36e87b;background: #24352c;box-shadow: 0 0 0 2px #9afd8d3a;}
+        #search-btn {display: flex;align-items: center;gap: 5px;background: linear-gradient(90deg, #3eff8d 0%, #22bf4c 100%);color: #fff;border-radius: 12px;padding: 10px 27px;font-size: 1em;font-weight: bold;border: none;box-shadow: 0 2.5px 9px #38df8a15;cursor: pointer;transition: background 0.19s, transform 0.12s;}
+        #search-btn:hover, #search-btn:focus {background: linear-gradient(90deg, #22bf4c 10%, #3eff8d 90%);transform: translateY(-2px) scale(1.04);}
+        .search-svg {display: inline-block;vertical-align: middle;}
+        .options-row {display: flex;justify-content: center;gap: 11px;margin-bottom: 14px;margin-top: 7px;flex-wrap: wrap;}
+        .option-field {display: flex;flex-direction: column;align-items: flex-start;min-width: 87px;}
+        .option-field label {font-size: 1em;color: #adf0a6;margin-bottom: 4px;font-weight: 500;}
+        .option-field select, .option-field input[type="number"] {border-radius: 9px;border: none;padding: 7px 11px;font-size: 1em;background: #1b2320;color: #abefbe;width: 94px;box-shadow: 0 1px 5px #25e85820;transition: outline 0.18s, box-shadow 0.19s;}
+        .option-field select:focus, .option-field input[type="number"]:focus {outline: 2px solid #36e87b;background: #253f2b;box-shadow: 0 0 0 1.5px #9dfdc94a;}
+        .features-row {text-align: right;margin-bottom: 0px;color: #97eb94;font-size: 1.07em;padding-right: 14px;}
+        .features-row input[type="checkbox"] {accent-color: #36e87b;width: 17px;height: 17px;}
+        .result-item {background: #1a2320ed;margin: 13px 0;padding: 12px 13px;border-radius: 10px;text-align: right;box-shadow: 0 2.5px 12px #38df8a18;position: relative;border-right: 3.5px solid #45e97b65;transition: box-shadow 0.14s;}
+        .result-item:hover {box-shadow: 0 6px 18px #48f89933;border-right: 5px solid #36e87b;background: #263e29e3;}
+        .score {float: left;font-size: 0.88em;color: #6cf7a7;opacity: 0.93;margin-top: 4px;font-weight: 500;letter-spacing: 0.01em;}
+        #loading-indicator {text-align: center;margin: 18px 0 4px 0;font-size: 1.11em;color: #abffcb;letter-spacing: 0.04em;}
         .hidden { display: none; }
-        .result-item { background: #181e25; margin: 14px 0; padding: 12px 14px; border-radius: 10px; text-align: right; }
-        .score { float: left; font-size: 0.85em; color: #ace7a7; }
-        .rag-answer { background: #26393a; border-radius: 8px; padding: 10px 18px; margin: 12px 0; }
+        .rag-answer {background: #223f33de;border-radius: 9px;padding: 13px 19px 10px 13px;margin: 18px 0 12px 0;text-align: right;box-shadow: 0 2.5px 9px #38df8a12;border-right: 3px solid #60edaa45;}
+        .rag-answer h3 {margin: 0 0 7px 0;color: #c2ffe3;font-weight: 700;font-size: 1.06em;}
+        .rag-answer hr {border: 0; height: 1px;background: #28e69038;margin: 10px 0;}
+        .error {color: #ffaeae;background: #2a1a1a;border-radius: 9px;padding: 8px;margin-top: 16px;font-size: 1.07em;box-shadow: 0 2.5px 9px #e1434336;}
+        ::-webkit-scrollbar-thumb {background: #44f07741;border-radius: 14px;}
+        ::-webkit-scrollbar {width: 7px;background: #212e25;}
+        @media (max-width: 600px) {
+            .center-box {padding: 19px 4vw 15px 4vw;min-width: unset;width: 99vw;max-width: 100vw;}
+            .main-row, .options-row {flex-direction: column;gap: 8px;}
+            .option-field {min-width: 0;width: 100%;}
+            #search-btn {width: 100%;min-width: 0;justify-content: center;}
+        }
     </style>
 </head>
 <body>
     <div class="center-box">
-        <h2>Information Retrieval System</h2>
+        <h2><span class="logo-icon">🔎</span> Information Retrieval System</h2>
         <div class="subtitle">
-            جرّب البحث في قواعد البيانات وفعّل
+            جرّب البحث في قواعد البيانات وفعّل الميزات المتقدمة
         </div>
-        <form id="search-form">
-            <div class="row">
-                <button type="submit" id="search-btn">بحث</button>
+        <form id="search-form" autocomplete="off">
+            <div class="main-row">
                 <input type="text" id="query-input" placeholder="...اكتب استعلامك هنا" required>
+                <button type="submit" id="search-btn">
+                    <span>بحث</span>
+                    <svg width="22" height="22" class="search-svg" viewBox="0 0 20 20"><circle cx="9" cy="9" r="7" stroke="white" stroke-width="2" fill="none"/><line x1="15" y1="15" x2="11.5" y2="11.5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
             </div>
-            <div class="row options">
-                <select id="dataset-select">
-                    <option value="antique">Antique</option>
-                    <option value="quora">Quora</option>
-                </select>
-                <input type="number" id="topk-input" value="10" min="1" max="100" style="width:70px;">
-                <label for="topk-input">:Top K</label>
-                <select id="model-select">
-                    <option value="bm25">BM25</option>
-                    <option value="tfidf">TF-IDF</option>
-                    <option value="bert">BERT</option>
-                    <option value="hybrid">Hybrid</option>
-                    <option value="vector">Vector Store</option>
-                    <option value="rag">RAG</option>
-                </select>
-                <label for="model-select">:النموذج</label>
+            <div class="options-row">
+                <div class="option-field">
+                    <label for="dataset-select">المجموعة:</label>
+                    <select id="dataset-select">
+                        <option value="antique">Antique</option>
+                        <option value="quora">Quora</option>
+                    </select>
+                </div>
+                <div class="option-field">
+                    <label for="topk-input">Top K:</label>
+                    <input type="number" id="topk-input" value="10" min="1" max="100">
+                </div>
+                <div class="option-field">
+                    <label for="model-select">النموذج:</label>
+                    <select id="model-select">
+                        <option value="bm25">BM25</option>
+                        <option value="tfidf">TF-IDF</option>
+                        <option value="bert">BERT</option>
+                        <option value="hybrid">Hybrid</option>
+                        <option value="vector">Vector Store</option>
+                        <option value="rag">RAG</option>
+                    </select>
+                </div>
+                <!-- هنا حقول BM25 تظهر فقط عند اختياره -->
+                <div class="option-field bm25-params" style="display:none;">
+                    <label for="k1-input">K1:</label>
+                    <input type="number" id="k1-input" step="0.01" placeholder="افتراضي" min="0.1" max="10">
+                </div>
+                <div class="option-field bm25-params" style="display:none;">
+                    <label for="b-input">b:</label>
+                    <input type="number" id="b-input" step="0.01" placeholder="افتراضي" min="0" max="1">
+                </div>
+            </div>
+            <div class="features-row">
+                <label><input type="checkbox" id="expand-query"> توسيع الكويري (Query Expansion)</label>
             </div>
         </form>
         <div id="loading-indicator" class="hidden">جاري البحث...</div>
@@ -62,7 +128,6 @@
     </div>
     <script>
         const API_BASE_URL = 'http://127.0.0.1:8000';
-
         const searchForm = document.getElementById('search-form');
         const queryInput = document.getElementById('query-input');
         const datasetSelect = document.getElementById('dataset-select');
@@ -71,52 +136,66 @@
         const expandQueryCheckbox = document.getElementById('expand-query');
         const resultsContainer = document.getElementById('results-container');
         const loadingIndicator = document.getElementById('loading-indicator');
+        const bm25ParamsFields = document.querySelectorAll('.bm25-params');
 
+        // إظهار أو إخفاء k1/b حسب النموذج المختار
+        modelSelect.addEventListener('change', function() {
+            if (modelSelect.value === "bm25") {
+                bm25ParamsFields.forEach(f => f.style.display = "flex");
+            } else {
+                bm25ParamsFields.forEach(f => f.style.display = "none");
+            }
+        });
+
+        // تابع تحديد endpoint حسب النموذج
+        function getApiEndpoint(model) {
+            if (model === 'bm25') return '/bm25/';
+            if (model === 'tfidf') return '/search/';
+            if (model === 'bert') return '/search-bert/';
+            if (model === 'hybrid') return '/hybrid/';
+            if (model === 'vector') return '/vector/';
+            if (model === 'rag') return '/rag/';
+            return '/search/';
+        }
+
+        // إرسال البحث
         searchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             resultsContainer.innerHTML = '';
             loadingIndicator.classList.remove('hidden');
-            
-            // القيم المطلوبة
             const query = queryInput.value.trim();
             const dataset = datasetSelect.value;
             const topk = topKInput.value;
             const model = modelSelect.value;
             const expandQuery = expandQueryCheckbox.checked;
 
-            // تحديد endpoint المناسب
-            let endpoint = '/search/';
-            if (model === 'bm25') endpoint = '/bm25/';
-            else if (model === 'tfidf') endpoint = '/search/';
-            else if (model === 'bert') endpoint = '/search-bert/';
-            else if (model === 'hybrid') endpoint = '/hybrid/';
-            else if (model === 'vector') endpoint = '/vector/';
-            else if (model === 'rag') endpoint = '/rag/';
-
-            // بناء الـ params أو الـ body
-            let params = `?query=${encodeURIComponent(query)}&dataset_key=${dataset}&topk=${topk}`;
+            let endpoint = getApiEndpoint(model);
+            let params = `?query=${encodeURIComponent(query)}&dataset=${dataset}&k=${topk}`;
             if (expandQuery) params += "&expand_query=true";
+
+            // باراميترات BM25
+            if (model === 'bm25') {
+                const k1 = document.getElementById('k1-input').value;
+                const b = document.getElementById('b-input').value;
+                if (k1) params += `&k1=${k1}`;
+                if (b) params += `&b=${b}`;
+            }
 
             try {
                 let response;
-                if (endpoint === '/rag/') {
-                    // RAG غالبا POST
+                if (model === 'rag') {
                     response = await fetch(API_BASE_URL + endpoint, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ query, dataset_key: dataset, topk: Number(topk), expand_query: expandQuery })
+                        body: JSON.stringify({ query, dataset_key: dataset })
                     });
                 } else {
-                    // البقية GET
                     response = await fetch(API_BASE_URL + endpoint + params);
                 }
                 if (!response.ok) throw new Error("API Error");
-
                 const data = await response.json();
-                // عرض النتائج حسب نوع الـ endpoint
-                if (endpoint === '/rag/') renderRagResults(data);
-                else renderSearchResults(data.results || data);
-
+                if (model === 'rag') renderRagResults(data);
+                else renderSearchResults(data);
             } catch (error) {
                 resultsContainer.innerHTML = `<div class="error">خطأ: ${error.message}</div>`;
             } finally {
@@ -124,24 +203,92 @@
             }
         });
 
-        function renderSearchResults(results) {
-            if (!results || results.length === 0) {
-                resultsContainer.innerHTML = "<p>لا توجد نتائج</p>";
+        // عرض نتائج البحث (كل النماذج عدا RAG)
+        function renderSearchResults(data) {
+            const results = Array.isArray(data) ? data : (data.results || []);
+            resultsContainer.innerHTML = "";
+
+            if (data.execution_time) {
+                resultsContainer.innerHTML += `<div style="color:#b1e8e2; margin-bottom:8px; font-size:0.97em;">
+                    الزمن: ${data.execution_time.toFixed(3)} ثانية
+                </div>`;
+            }
+
+            if (!results.length) {
+                resultsContainer.innerHTML += "<p>لا توجد نتائج</p>";
                 return;
             }
-            resultsContainer.innerHTML = "";
+
+            const model = modelSelect.value;
+            let cleanField = "";
+            let cleanLabel = "";
+
+            if (model === "bm25") {
+                cleanField = "clean_text_bm25";
+                cleanLabel = "النص المنظف (BM25)";
+            }
+            else if (model === "tfidf") {
+                cleanField = "clean_text_tf";
+                cleanLabel = "النص المنظف (TF-IDF)";
+            }
+            else if (model === "bert") {
+                cleanField = "clean_text_bert";
+                cleanLabel = "النص المنظف (BERT)";
+            }
+            else if (model === "vector") {
+                cleanField = "clean_text_bert";
+                cleanLabel = "النص المنظف (VECTOR)";
+            }
+            else if (model === "hybrid") {
+                cleanField = null;
+                cleanLabel = null;
+            }
+            else {
+                cleanField = "";
+                cleanLabel = "";
+            }
+
             results.forEach(item => {
+                let cleanText = "";
+                let cleanBm25 = "";
+                let cleanBert = "";
+
+                if (model === "hybrid") {
+                    cleanBm25 = item["clean_text_bm25"] || "";
+                    cleanBert = item["clean_text_bert"] || "";
+                } else {
+                    cleanText = cleanField ? (item[cleanField] || "") : "";
+                }
+
                 const div = document.createElement('div');
                 div.className = 'result-item';
                 div.innerHTML = `
                     <b>${item.doc_id || "مستند"}</b>
                     <span class="score">Score: ${item.score?.toFixed(3) || ""}</span>
-                    <div>${item.text ? item.text.substring(0, 200) + "..." : ""}</div>
+                    <div style="margin-top:10px; color:#b0ffbe;"><b>النص الأصلي:</b></div>
+                    <div>${item.text ? item.text : ""}</div>
+                    ${
+                        model === "hybrid"
+                        ? `
+                            <div style="margin-top:8px; color:#82e2ff;"><b>النص المنظف (BM25):</b></div>
+                            <div style="font-size:0.97em;">${cleanBm25}</div>
+                            <div style="margin-top:8px; color:#ffd680;"><b>النص المنظف (BERT):</b></div>
+                            <div style="font-size:0.97em;">${cleanBert}</div>
+                        `
+                        : (
+                            cleanField && cleanText 
+                            ? `
+                                <div style="margin-top:8px; color:#76e7b9;"><b>${cleanLabel}:</b></div>
+                                <div style="font-size:0.98em;">${cleanText}</div>
+                            ` : ''
+                        )
+                    }
                 `;
                 resultsContainer.appendChild(div);
             });
         }
 
+        // عرض نتائج RAG مع الإجابة المباشرة
         function renderRagResults(data) {
             resultsContainer.innerHTML = `
                 <div class="rag-answer">
@@ -151,11 +298,18 @@
                     <b>المستندات المستخدمة:</b>
                 </div>
             `;
-            renderSearchResults(data.source_documents?.map(d => ({
-                doc_id: d.doc_id,
-                text: d.content,
-                score: d.score
-            })));
+            if (data.source_documents && data.source_documents.length) {
+                data.source_documents.forEach(doc => {
+                    const div = document.createElement('div');
+                    div.className = 'result-item';
+                    div.innerHTML = `
+                        <b>${doc.doc_id || "مستند"}</b>
+                        <div style="margin-top:8px; color:#b0ffbe;"><b>النص:</b></div>
+                        <div>${doc.content}</div>
+                    `;
+                    resultsContainer.appendChild(div);
+                });
+            }
         }
     </script>
 </body>

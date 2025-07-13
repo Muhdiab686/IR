@@ -13,7 +13,15 @@ from app.endpoints.vectordb_search import router as vector_router
 from app.endpoints.text_processing import router as text_processing
 
 app = FastAPI(title="IR Search API")
+from fastapi.middleware.cors import CORSMiddleware
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # أو ضع رابط الواجهة تحديدًا مثلاً: ["http://127.0.0.1:8080"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # تسجيل المسارات
 app.include_router(search_router, prefix="/search", tags=["Search"])
 app.include_router(bm25_router, prefix="/bm25", tags=["BM25 Search"])

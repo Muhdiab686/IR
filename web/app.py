@@ -1,29 +1,10 @@
-# web/app.py
+from flask import Flask, render_template
 
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-import os
+app = Flask(__name__)
 
-# إنشاء تطبيق FastAPI جديد للواجهة
-app = FastAPI()
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-# تحديد مسار المجلدات
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_DIR = os.path.join(BASE_DIR, "static")
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
-
-# 1. خدمة الملفات الثابتة (CSS, JS)
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-
-# 2. إعداد قوالب Jinja2
-templates = Jinja2Templates(directory=TEMPLATES_DIR)
-
-# 3. إنشاء Endpoint رئيسي لعرض صفحة البحث
-@app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    """
-    هذا الـ Endpoint يعرض صفحة البحث الرئيسية index.html
-    """
-    return templates.TemplateResponse("index.html", {"request": request})
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080, debug=True)
